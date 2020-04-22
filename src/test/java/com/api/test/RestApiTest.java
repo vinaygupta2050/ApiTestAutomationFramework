@@ -3,8 +3,7 @@ package com.api.test;
 import com.api.apiFactory.ApiEndPoints;
 import com.api.apiFactory.ApiHeaders;
 import com.api.pojo.Booking;
-import com.api.utils.ExtentReportLogger;
-import com.api.utils.ExtentReportManager1;
+import com.api.utils.ExtentReportManager;
 import com.api.utils.Helper;
 import com.api.utils.SerializeDeserialize;
 import com.aventstack.extentreports.Status;
@@ -23,8 +22,8 @@ public class RestApiTest extends BaseTest {
     public void getAllBookings() {
         httpRequest.headers(ApiHeaders.defaultHeader());
         Response rs=httpRequest.request(Method.GET, ApiEndPoints.GET_BOOKING);
-        ExtentReportManager1.getTest().log(Status.INFO,"Status Code : "+rs.getStatusCode());
-        ExtentReportManager1.getTest().log(Status.INFO,"Response    : "+rs.getBody().prettyPrint().toString());
+        ExtentReportManager.getTest().log(Status.INFO,"Status Code : "+rs.getStatusCode());
+        ExtentReportManager.getTest().log(Status.INFO,"Response    : "+rs.getBody().prettyPrint().toString());
         Assert.assertTrue(rs.getBody().jsonPath().getList("bookings.bookingid").size() > 0);
     }
 
@@ -33,8 +32,8 @@ public class RestApiTest extends BaseTest {
         httpRequest.headers(ApiHeaders.defaultHeader());
         httpRequest.queryParam("1");
         Response rs= httpRequest.request(Method.GET, ApiEndPoints.GET_BOOKING);
-        ExtentReportManager1.getTest().log(Status.INFO,"Status Code : "+rs.getStatusCode());
-        ExtentReportManager1.getTest().log(Status.INFO,"Response    : "+rs.getBody().prettyPrint().toString());
+        ExtentReportManager.getTest().log(Status.INFO,"Status Code : "+rs.getStatusCode());
+        ExtentReportManager.getTest().log(Status.INFO,"Response    : "+rs.getBody().prettyPrint().toString());
         Assert.assertEquals(rs.getBody().jsonPath().getString("bookings[0].bookingid"), "1");
     }
 
@@ -44,17 +43,17 @@ public class RestApiTest extends BaseTest {
         Booking bookingDetails = new Booking(1,true,"mnmoup@gmail.com","testFirstName","testLasttName","99999999999",roomID,"2019-01-01","2019-01-07");
         httpRequest.headers(ApiHeaders.headerWithContentType());
         httpRequest.body(SerializeDeserialize.getJson(bookingDetails));
-        ExtentReportManager1.getTest().log(Status.INFO,"Request    : "+SerializeDeserialize.getJson(bookingDetails).toString());
+        ExtentReportManager.getTest().log(Status.INFO,"Request    : "+SerializeDeserialize.getJson(bookingDetails).toString());
         Response rs=httpRequest.request(Method.POST, ApiEndPoints.GET_BOOKING);
-        ExtentReportManager1.getTest().log(Status.INFO,"Status Code : "+rs.getStatusCode());
+        ExtentReportManager.getTest().log(Status.INFO,"Status Code : "+rs.getStatusCode());
         Assert.assertEquals(rs.getStatusCode(), 201);
-        ExtentReportManager1.getTest().log(Status.INFO,"Response    : "+rs.getBody().prettyPrint().toString());
-        ExtentReportManager1.getTest().log(Status.PASS,"Booking created Successfully");
+        ExtentReportManager.getTest().log(Status.INFO,"Response    : "+rs.getBody().prettyPrint().toString());
+        ExtentReportManager.getTest().log(Status.PASS,"Booking created Successfully");
 
-        ExtentReportManager1.getTest().log(Status.INFO,"Verifying created booking");
+        ExtentReportManager.getTest().log(Status.INFO,"Verifying created booking");
         String createdBookingID= rs.getBody().jsonPath().getString("bookingid");
         Response subsiquentRequestResponse=httpRequest.queryParam("roomid",roomID).request(Method.GET,ApiEndPoints.GET_BOOKING);
-        ExtentReportManager1.getTest().log(Status.INFO,"Response    : "+subsiquentRequestResponse.getBody().asString());
+        ExtentReportManager.getTest().log(Status.INFO,"Response    : "+subsiquentRequestResponse.getBody().asString());
         Assert.assertEquals(subsiquentRequestResponse.getBody().jsonPath().getString("bookings[0].firstname"),"testFirstName");
     }
     @Test(enabled=true,description = "Verify whether /booking end point is able to bring booking details of single user")
@@ -63,13 +62,13 @@ public class RestApiTest extends BaseTest {
         Booking bookingDetails = new Booking(1,true,"mnmoup@gmail.com","testFirstName","testLasttName","99999999999",roomID,"2019-01-01","2019-01-07");
         httpRequest.headers(ApiHeaders.headerWithContentType());
         httpRequest.body(SerializeDeserialize.getJson(bookingDetails));
-        ExtentReportManager1.getTest().log(Status.INFO,"Request    : "+SerializeDeserialize.getJson(bookingDetails).toString());
+        ExtentReportManager.getTest().log(Status.INFO,"Request    : "+SerializeDeserialize.getJson(bookingDetails).toString());
         Response rs=httpRequest.request(Method.POST, ApiEndPoints.GET_BOOKING);
-        ExtentReportManager1.getTest().log(Status.INFO,"Status Code : "+rs.getStatusCode());
+        ExtentReportManager.getTest().log(Status.INFO,"Status Code : "+rs.getStatusCode());
         Assert.assertEquals(rs.getStatusCode(), 201);
-        ExtentReportManager1.getTest().log(Status.INFO,"Response    : "+rs.getBody().prettyPrint().toString());
-        ExtentReportManager1.getTest().log(Status.PASS,"Booking created Successfully");
-        ExtentReportManager1.getTest().log(Status.INFO,"Verifying Json Response Schema");
+        ExtentReportManager.getTest().log(Status.INFO,"Response    : "+rs.getBody().prettyPrint().toString());
+        ExtentReportManager.getTest().log(Status.PASS,"Booking created Successfully");
+        ExtentReportManager.getTest().log(Status.INFO,"Verifying Json Response Schema");
         rs.then().assertThat().body(JsonSchemaValidator.matchesJsonSchemaInClasspath("JsonSchemaFile.json")).log().all();
 
     }

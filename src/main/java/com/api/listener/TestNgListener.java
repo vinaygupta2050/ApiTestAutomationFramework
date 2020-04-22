@@ -1,43 +1,57 @@
 package com.api.listener;
 
-import com.api.utils.ExtentReportLogger;
 import com.api.utils.ExtentReportManager;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
-import org.testng.ITestContext;
-import org.testng.ITestListener;
-import org.testng.ITestResult;
+import org.testng.*;
 
 public class TestNgListener implements ITestListener {
-    protected static ExtentReports reports;
-    protected static ExtentTest test;
 
-    public void onTestStart(ITestResult result){
-        test=reports.createTest(result.getMethod().getMethodName()) ;
+    //Extent Report Declarations
+    private static ExtentReports extent = ExtentReportManager.createInstance();
+    private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
 
-        test.log(Status.INFO,result.getMethod().getMethodName());
-        test.log(Status.INFO,result.getMethod().getDescription());
-        test.log(Status.INFO,"Test Execution Started");
+    @Override
+    public synchronized void onStart(ITestContext context) {
+        System.out.println("Extent Reports Version 3 Test Suite started!");
     }
-    public void onTestSuccess(ITestResult result)
-    {
-        test.log(Status.PASS,"Test case Pass Successfully!!!!!");
+
+    @Override
+    public synchronized void onFinish(ITestContext context) {
+        System.out.println(("Extent Reports Version 3  Test Suite is ending!"));
+        extent.flush();
     }
-    public void onTestFailure(ITestResult result)
-    {
-        test.log(Status.FAIL,result.getThrowable());
-        test.log(Status.FAIL,"Test case Failed");
+
+    @Override
+    public synchronized void onTestStart(ITestResult result) {
+        ExtentTest extentTest = extent.createTest(result.getMethod().getMethodName(),result.getMethod().getDescription());
+        ExtentReportManager.setTest(extentTest);
+        System.out.println((result.getMethod().getMethodName() + " started!"));
     }
-    public void onTestFailedButWithinSuccessPercentage(ITestResult result)
-    {
-        test.log(Status.FAIL,"Test is Failed");
+
+    @Override
+    public synchronized void onTestSuccess(ITestResult result) {
+        System.out.println((result.getMethod().getMethodName() + " passed!"));
+        ExtentReportManager.getTest().log(Status.PASS,"Test Pass Successfully!!!!");
     }
-    public void onStart(ITestContext context) {
-        reports = ExtentReportManager.createInstance();
+
+    @Override
+    public synchronized void onTestFailure(ITestResult result) {
+        System.out.println((result.getMethod().getMethodName() + " failed!"));
+        ExtentReportManager.getTest().log(Status.FAIL,result.getThrowable());
     }
-    public void onFinish(ITestContext context) {
-        reports.flush();
+
+    @Override
+    public synchronized void onTestSkipped(ITestResult result) {
+        System.out.println((result.getMethod().getMethodName() + " skipped!"));
+        ExtentReportManager.getTest().log(Status.SKIP,result.getThrowable());
     }
+
+    @Override
+    public synchronized void onTestFailedButWithinSuccessPercentage(ITestResult result) {
+        System.out.println(("onTestFailedButWithinSuccessPercentage for " + result.getMethod().getMethodName()));
+    }
+
 
 }
