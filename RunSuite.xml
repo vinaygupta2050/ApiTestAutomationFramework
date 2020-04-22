@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="GoEuro test suite">
+    <listeners>
+        <listener class-name="com.api.listener.TestNgListener"></listener>
+    </listeners>
+    <test name="Sort test">
+        <classes>
+            <class name="com.api.test.RestApiTest"/>
+        </classes>
+    </test>
+</suite>
