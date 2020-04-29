@@ -3,6 +3,7 @@ package com.api.test;
 import com.api.apiFactory.ApiEndPoints;
 import com.api.apiFactory.ApiHeaders;
 import com.api.pojo.Booking;
+import com.api.utils.CsvDataProvider;
 import com.api.utils.ExtentReportManager;
 import com.api.utils.Helper;
 import com.api.utils.SerializeDeserialize;
@@ -13,6 +14,8 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.sql.SQLOutput;
 
 public class RestApiTest extends BaseTest {
 
@@ -71,5 +74,17 @@ public class RestApiTest extends BaseTest {
         ExtentReportManager.getTest().log(Status.INFO,"Verifying Json Response Schema");
         rs.then().assertThat().body(JsonSchemaValidator.matchesJsonSchemaInClasspath("JsonSchemaFile.json")).log().all();
 
+    }
+    @Test(enabled = true,dataProvider = "testData",dataProviderClass = CsvDataProvider.class)
+    public void testData(String name,String age)
+    {
+        System.out.println("Name"+name);
+        System.out.println("Age"+age);
+    }
+    @Test(enabled = true,dataProvider = "testData",dataProviderClass = CsvDataProvider.class)
+    public void testData1(String name,String age)
+    {
+        System.out.println("Name"+name);
+        System.out.println("Age"+age);
     }
 }
