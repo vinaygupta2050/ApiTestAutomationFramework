@@ -23,6 +23,7 @@ Prerequisites
 The library which plays a major role in building this framework is Rest Assured.  REST Assured is a Java library that provides a domain-specific language (DSL) for writing powerful, maintainable tests for RESTful APIs.
 
 Folder Structure:
+```
 
 ├── src
 │   ├── main
@@ -44,6 +45,7 @@ Folder Structure:
 │       └── resources
 └── test-output
     └── Report
+```
 
 ## Configuration
 
